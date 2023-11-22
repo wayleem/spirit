@@ -1,36 +1,36 @@
-const url = require("url")
+const url = require("url");
 
 const urlquery = (req, request) => {
-  if (!req.url) return
-  const result = url.parse(req.url, true)
-  request.url = result.pathname
-  request.pathname = result.pathname // alias to url for those who are use to node.js url api
-  request.query = result.query
-}
+  if (!req.url) return;
+  const result = url.parse(req.url, true);
+  request.url = result.pathname;
+  request.pathname = result.pathname; // alias to url for those who are use to node.js url api
+  request.query = result.query;
+};
 
 const hostport = (req, request) => {
   if (req.headers && req.headers.host) {
-    const host = req.headers.host
+    const host = req.headers.host;
     // ipv6
-    let offset = 0
+    let offset = 0;
     if (host[0] === "[") {
-      offset = host.indexOf("]") + 1
+      offset = host.indexOf("]") + 1;
     }
     const index = host.indexOf(":", offset);
-    request.host = host
+    request.host = host;
     if (index !== -1) {
-      request.host = host.substring(0, index)
-      request.port = parseInt(host.substring(index + 1, host.length))
+      request.host = host.substring(0, index);
+      request.port = parseInt(host.substring(index + 1, host.length));
     }
   }
-}
+};
 
 const protocol = (req, request) => {
-  request.protocol = "http"
+  request.protocol = "http";
   if (req.connection && req.connection.encrypted) {
-    request.protocol = "https"
+    request.protocol = "https";
   }
-}
+};
 
 /**
  * create a request map
@@ -63,26 +63,27 @@ const create = (req) => {
     scheme: req.httpVersion,
     path: req.url,
     //body: req
-    req: function() {
-      return req
-    }
-  }
+    req: function () {
+      return req;
+    },
+  };
 
   if (req.connection) {
-    request.ip = req.connection.remoteAddress
+    request.ip = req.connection.remoteAddress;
   }
 
-  if (typeof request.method === "string") request.method = request.method.toUpperCase()
+  if (typeof request.method === "string")
+    request.method = request.method.toUpperCase();
 
-  protocol(req, request)
-  hostport(req, request)
-  urlquery(req, request)
-  return request
-}
+  protocol(req, request);
+  hostport(req, request);
+  urlquery(req, request);
+  return request;
+};
 
 module.exports = {
   hostport,
   protocol,
   urlquery,
-  create
-}
+  create,
+};

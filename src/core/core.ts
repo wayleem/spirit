@@ -2,8 +2,7 @@
  * main spirit file
  */
 
-const p_utils = require("./promise_utils")
-
+const p_utils = require("./promise_utils");
 
 /**
  * A reducer function, for reducing over a handler
@@ -18,21 +17,21 @@ const p_utils = require("./promise_utils")
  */
 const compose = (handler, middleware) => {
   // wrap `fn` to always returns a promise
-  const wrap = function(fn) {
-    return function() {
-      return p_utils.callp(fn, arguments)
-    }
-  }
+  const wrap = function (fn) {
+    return function () {
+      return p_utils.callp(fn, arguments);
+    };
+  };
 
-  let accum = wrap(handler)
+  let accum = wrap(handler);
 
   for (let i = middleware.length - 1; i >= 0; i--) {
-    accum = wrap(middleware[i](accum))
+    accum = wrap(middleware[i](accum));
   }
 
-  return accum
-}
+  return accum;
+};
 
 module.exports = {
-  compose
-}
+  compose,
+};
